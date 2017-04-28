@@ -6,11 +6,11 @@
       <form id="myForm">
         <div class="form-group">
           <label for="exampleInputEmail1">Username</label>
-          <input type="text" class="form-control" v-model="user" placeholder="User">
+          <input type="text" class="form-control" v-model="info.user" placeholder="User">
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Mensaje</label>
-          <textarea v-on:keyup.enter="addMessage(message)" class="form-control" rows="3" v-model="message" placeholder="add multiple lines"></textarea>
+          <textarea v-on:keyup.enter="addMessage(message)" class="form-control" rows="3" v-model="info.message" placeholder="add multiple lines"></textarea>
         </div>
       </form>      
       <br>
@@ -22,8 +22,12 @@
     <div class="col-md-7">      
       <ul class="list-group">
         <li class="list-group-item" v-for="item in listMessages">
-          {{ item.body }} -- {{item.time | formatDate}}
-          <span class="label label-default">Hola</span>
+          <strong>User: </strong>{{item.user}}
+          <strong>Message: </strong> {{ item.body }} Time: {{item.time | formatDate}}
+          <span class="label label-default">{{item.time | parseDate}}</span>
+          <button v-on:click="removeMessage(item._id)" class="btn btn-danger btn-xs">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </button>
         </li>
       </ul>
       </div>
@@ -36,10 +40,12 @@
   export default {
     data() {
       return {
-        message: '',
-        user: '',
-        messageFinal: '',
-        listMessages: []
+        info: {
+            user: '',
+            message: ''            
+        },
+        listMessages: [],
+        messageFinal: ''
       }
     },
     created: function () {
@@ -54,17 +60,18 @@
       parseDate: function (value) {
         if (!value) return ''
         value = value.toString()
-        return moment(this.props.time).fromNow()
+        return moment(value).fromNow()
       }
     },
     methods: {
       addMessage () {
-        this.$http.post('/api/addmessage', [this.message])
+        var data = JSON.stringify(this.info);
+        this.$http.post('/api/addmessage', data)
         .then(function(res){
                 this.getMessages ();
 				        // set the data after ajax request
-                this.message = ''
-                this.user = ''
+                this.info.message = ''
+                this.info.user = ''
                 this.messageFinal = res.data.body
             })
       },
@@ -72,6 +79,12 @@
         this.$http.get('/api/messages')
         .then(function(res){
                 this.listMessages = res.data;
+            })
+      },
+      removeMessage (id) {
+        this.$http.post('/api/removemessage',[id])
+        .then(function(res){
+                this.getMessages ();
             })
       }
     }

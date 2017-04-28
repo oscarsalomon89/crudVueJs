@@ -3,7 +3,7 @@ var Schema   = mongoose.Schema;
 
 var MessageSchema = new Schema({
    id: Number,
-   username: String,
+   user: String,
    body: String,
    time: Date
 });

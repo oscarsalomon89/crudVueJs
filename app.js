@@ -29,7 +29,8 @@ app.post('/api/addmessage', function(req, res) {
     var valorId = (cantidad + 1);
     var parametros = {
        id: valorId,
-       body: req.body,
+       user: req.body.user,
+       body: req.body.message,
        time: new Date()
     };
     //Realizo la inserción de datos
@@ -41,6 +42,14 @@ app.post('/api/addmessage', function(req, res) {
        }
     });
   })
+});
+
+app.post('/api/removemessage', function(req, res) {
+    Message.findByIdAndRemove(req.body, function(err) {
+      if (err) throw err;
+      // we have deleted the user
+      return res.json({'msg':'User deleted!'});
+    });
 });
 
 app.get('/api/messages', function(req, res) {
