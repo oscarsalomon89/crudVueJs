@@ -44,6 +44,31 @@ app.post('/api/addmessage', function(req, res) {
   })
 });
 
+app.post('/api/updatemessage', function(req, res) {
+  console.log(req.body[1]);
+  Message.findById(req.body[0], function (err, ms) {  
+    // Handle any possible database errors
+    if (err) {
+        res.status(500).send(err);
+    } else {
+        mensaje = req.body[1];
+        // Update each attribute with any possible attribute that may have been submitted in the body of the request
+        // If that attribute isn't in the request body, default back to whatever it was before.
+        ms.user = mensaje.user;
+        ms.body = mensaje.message;
+        ms.time = new Date();
+
+        // Save the updated document back to the database
+        ms.save(function (err, todo) {
+            if (err) {
+                res.status(500).send(err)
+            }
+            res.send(todo);
+        });
+    }
+  })
+});
+
 app.post('/api/removemessage', function(req, res) {
     Message.findByIdAndRemove(req.body, function(err) {
       if (err) throw err;
@@ -62,6 +87,13 @@ app.get('/api/messages', function(req, res) {
                return res.json(messages);
            }
         });
+});
+
+app.post('/api/editmessage',function(req, res) {
+    Message.findById(req.body, function(err,msg) {
+      if (err) throw err;
+      return res.json(msg);
+    });
 });
 
 app.get('*', function(req, res) {
