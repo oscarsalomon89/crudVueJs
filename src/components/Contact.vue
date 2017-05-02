@@ -4,18 +4,18 @@
     <div class="row">
       <div class="col-md-5">
         <form id="myForm">
-          <input type="hidden" v-model="iduser">
+          <input type="hidden" v-model="info.iduser">
           <div class="form-group">
             <label for="exampleInputEmail1">Username</label>
             <input type="text" class="form-control" v-model="info.user" placeholder="User">
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Mensaje</label>
-            <textarea v-on:keyup.enter="addMessage(message)" class="form-control" rows="3" v-model="info.message" placeholder="add multiple lines"></textarea>
+            <textarea v-on:keyup.enter="addMessage()" class="form-control" rows="3" v-model="info.message" placeholder="add multiple lines"></textarea>
           </div>
         </form>      
         <br>
-        <button class="btn btn-primary" v-on:click="addMessage(message)">Enviar Mensaje
+        <button class="btn btn-primary" v-on:click="addMessage()">Enviar Mensaje
         </button>
         <h2>Ultimo mensaje:</h2>
         <h3>{{messageFinal}}</h3>
@@ -59,11 +59,11 @@
       return {
         info: {
             user: '',
-            message: ''            
+            message: '',
+            iduser: ''            
         },
         listMessages: [],
-        messageFinal: '',
-        iduser: ''
+        messageFinal: ''
       }
     },
     created: function () {
@@ -84,8 +84,8 @@
     methods: {
       addMessage () {
         var data = JSON.stringify(this.info);
-        if(this.iduser != ''){
-          this.updateMessage(this.iduser);
+        if(this.info.iduser != ''){
+          this.updateMessage();
           return;
         }
               
@@ -113,17 +113,18 @@
       editMessage (id) {
         this.$http.post('/api/editmessage',[id])
         .then(function(res){
-                this.iduser = res.data._id;
+                this.info.iduser = res.data._id;
                 this.info.user = res.data.user;
                 this.info.message = res.data.body;
             })
       }
       ,
-      updateMessage(id) {
+      updateMessage() {
         var data = JSON.stringify(this.info);
-        this.$http.post('/api/updatemessage',[id,data])
+        this.$http.post('/api/updatemessage',data)
         .then(function(res){
-                this.iduser = ''
+                this.getMessages();
+                this.info.iduser = ''
                 this.info.message = ''
                 this.info.user = ''
                 this.messageFinal = 'Modificado'

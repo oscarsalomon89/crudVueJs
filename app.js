@@ -24,7 +24,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/addmessage', function(req, res) {
   Message.count({},function(err,cantidad) {
-      
     //Parámetros para la inserción de datos
     var valorId = (cantidad + 1);
     var parametros = {
@@ -45,18 +44,17 @@ app.post('/api/addmessage', function(req, res) {
 });
 
 app.post('/api/updatemessage', function(req, res) {
-  Message.findById(req.body[0], function (err, ms) {  
+  Message.findById(req.body.iduser, function (err, ms) {  
     // Handle any possible database errors
     if (err) {
         res.status(500).send(err);
     } else {
-        mensaje = req.body[1];
-        console.log(req.body[1].user);
+        mensaje = req.body;        
         // Update each attribute with any possible attribute that may have been submitted in the body of the request
         // If that attribute isn't in the request body, default back to whatever it was before.
         ms.user = mensaje.user;
         ms.body = mensaje.message;
-        ms.time = new Date();
+        ms.timeUpdate = new Date();
 
         // Save the updated document back to the database
         ms.save(function (err, todo) {

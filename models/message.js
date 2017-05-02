@@ -5,7 +5,8 @@ var MessageSchema = new Schema({
    id: Number,
    user: String,
    body: String,
-   time: Date
+   time: Date,
+   timeUpdate: Date
 });
 
 var Message = mongoose.model('Message', MessageSchema);
