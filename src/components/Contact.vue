@@ -85,7 +85,7 @@
       addMessage () {
         var data = JSON.stringify(this.info);
         if(this.iduser != ''){
-          this.updateMessage(this.iduser,data);
+          this.updateMessage(this.iduser);
           return;
         }
               
@@ -113,16 +113,17 @@
       editMessage (id) {
         this.$http.post('/api/editmessage',[id])
         .then(function(res){
-                this.iduser = res.data.id;
+                this.iduser = res.data._id;
                 this.info.user = res.data.user;
                 this.info.message = res.data.body;
             })
       }
       ,
-      updateMessage (id,form) {
-        this.$http.post('/api/updatemessage',[id,form])
+      updateMessage(id) {
+        var data = JSON.stringify(this.info);
+        this.$http.post('/api/updatemessage',[id,data])
         .then(function(res){
-                this.iduser = '';
+                this.iduser = ''
                 this.info.message = ''
                 this.info.user = ''
                 this.messageFinal = 'Modificado'

@@ -45,13 +45,13 @@ app.post('/api/addmessage', function(req, res) {
 });
 
 app.post('/api/updatemessage', function(req, res) {
-  console.log(req.body[1]);
   Message.findById(req.body[0], function (err, ms) {  
     // Handle any possible database errors
     if (err) {
         res.status(500).send(err);
     } else {
         mensaje = req.body[1];
+        console.log(req.body[1].user);
         // Update each attribute with any possible attribute that may have been submitted in the body of the request
         // If that attribute isn't in the request body, default back to whatever it was before.
         ms.user = mensaje.user;
