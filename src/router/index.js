@@ -9,11 +9,11 @@ import Contact from '../components/Contact.vue'
 Vue.use(Router)
 Vue.use(VueResource)
 
-Vue.http.interceptors.push((request, next) => {
+/*Vue.http.interceptors.push((request, next) => {
   request.headers['Authorization'] = 'hello'
   request.headers['Accept'] = 'application/json'
   next()
-})
+})*/
 
 export default new Router({
   mode: 'history',
