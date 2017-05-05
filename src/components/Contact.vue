@@ -44,6 +44,8 @@
     },
     created: function () {
       this.getMessages ();
+      document.getElementById("navContact").className += " active";
+      document.getElementById("navHome").removeAttribute('class');
     },
     methods: {
       addMessage () {

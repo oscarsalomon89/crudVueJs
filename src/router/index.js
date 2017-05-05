@@ -5,6 +5,7 @@ import VueResource from 'vue-resource'
 import Home from '../components/Home.vue'
 import About from '../components/About.vue'
 import Contact from '../components/Contact.vue'
+import Login from '../components/Login.vue'
 
 Vue.use(Router)
 Vue.use(VueResource)
@@ -22,6 +23,11 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
     },
     {
       path: '/about',
