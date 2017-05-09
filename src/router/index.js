@@ -6,6 +6,7 @@ import Home from '../components/Home.vue'
 import About from '../components/About.vue'
 import Contact from '../components/Contact.vue'
 import Login from '../components/Login.vue'
+import Signup from '../components/Signup.vue'
 
 Vue.use(Router)
 Vue.use(VueResource)
@@ -28,6 +29,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
     },
     {
       path: '/about',

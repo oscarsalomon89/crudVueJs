@@ -7,9 +7,9 @@
                 <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                     alt="">
                 <form class="form-signin">
-                <input type="text" class="form-control" placeholder="Usuario" required autofocus>
-                <input type="password" class="form-control" placeholder="Password" required>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                <input v-model="info.user" type="text" class="form-control" placeholder="Usuario" required autofocus>
+                <input v-model="info.password" type="password" class="form-control" placeholder="Password" required>
+                <button class="btn btn-lg btn-primary btn-block" v-on:click="login()">
                     Ingresar</button>
                 <label class="checkbox pull-left">
                     <input type="checkbox" value="remember-me">
@@ -18,7 +18,7 @@
                 <a href="#" class="pull-right need-help">Ayuda</a><span class="clearfix"></span>
                 </form>
             </div>
-            <a href="#" class="text-center new-account">Crear cuenta</a>
+            <router-link class="text-center new-account" to="/signup">Crear cuenta</router-link>
         </div>
     </div>
 </div>
@@ -99,3 +99,32 @@
 display: block;
 }
 </style>
+<script>
+  
+  export default {
+    data() {
+      return {
+        info: {
+            user: '',
+            password: ''            
+        }
+      }
+    },
+    methods: {
+      login () {
+        var data = JSON.stringify(this.info);
+              
+        this.$http.post('/api/login', data)
+        .then(function(res){
+        console.log(res);
+                if(res.error){
+                    alert(res.err);
+                }else{
+                    alert('ingreso');
+                }
+                
+            })
+      }
+    }
+  }
+</script>

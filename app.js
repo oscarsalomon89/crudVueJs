@@ -4,10 +4,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose    = require('mongoose');
+var bcrypt  = require('bcrypt-nodejs');
 var router = express.Router();
 var app = express();
 
 var Message = require('./models/message');
+var User = require('./models/user');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +43,45 @@ app.post('/api/addmessage', function(req, res) {
        }
     });
   })
+});
+
+app.post('/api/adduser', function(req, res) {
+    var salt = bcrypt.genSaltSync();
+    var password_hash = bcrypt.hashSync(req.body.password,salt);
+    //Parámetros para la inserción de datos
+    var parametros = {
+       username: req.body.user,
+       email: req.body.email,
+       password: password_hash
+    };
+    //Realizo la inserción de datos
+    new User(parametros).save(function(error, mensaje){
+       if (error) {
+          return console.log('error');
+       } else {
+          return res.json(mensaje);
+       }
+    });
+});
+
+app.post('/api/login', function(req, res) {
+    var name = req.body.user;
+    var pass = req.body.password;
+
+    User.findOne({ username: name}, function(error, user){        
+         if(error){
+            return res.json({'error': true, 'err': 'Usuario inexistente'});
+         }else{
+            if (user) {
+              if (bcrypt.compareSync(pass,user.password)) {
+                  return res.json({'error': false, 'user': user});
+              }
+              else {
+                return res.json({'error': true, 'err': 'Contraseña incorrecta'});
+              }
+            }
+         }
+      });
 });
 
 app.post('/api/updatemessage', function(req, res) {
