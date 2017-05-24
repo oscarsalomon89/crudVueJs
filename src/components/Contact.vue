@@ -1,4 +1,6 @@
 <template>
+  <div>
+    <Navbar></Navbar>
   <div class="page-header">
     <h1>Example page header <small>Subtext for header</small></h1>
     <div class="row">
@@ -13,30 +15,32 @@
             <label for="exampleInputPassword1">Mensaje</label>
             <textarea v-on:keyup.enter="addMessage()" class="form-control" rows="3" v-model="info.message" placeholder="add multiple lines"></textarea>
           </div>
-        </form>      
+        </form>
         <br>
         <button class="btn btn-primary" v-on:click="addMessage()">Enviar Mensaje
         </button>
         <h2>Ultimo mensaje:</h2>
         <h3>{{messageFinal}}</h3>
       </div>
-      <div class="col-md-7">      
+      <div class="col-md-7">
           <tableMessages :listMessages="listMessages"></tableMessages>
         </div>
     </div>
   </div>
+  </div>
 </template>
-<script>  
+<script>
+  import Navbar from './Navbar.vue';
   import Table from './Table.vue';
-  
+
   export default {
-    components: { 'tableMessages': Table },
+    components: { 'tableMessages': Table,'Navbar': Navbar },
     data() {
       return {
         info: {
             user: '',
             message: '',
-            iduser: ''            
+            iduser: ''
         },
         listMessages: [],
         messageFinal: ''
@@ -44,8 +48,6 @@
     },
     created: function () {
       this.getMessages ();
-      document.getElementById("navContact").className += " active";
-      document.getElementById("navHome").removeAttribute('class');
     },
     methods: {
       addMessage () {
@@ -54,7 +56,7 @@
           this.updateMessage();
           return;
         }
-              
+
         this.$http.post('/api/addmessage', data)
         .then(function(res){
                 this.getMessages ();

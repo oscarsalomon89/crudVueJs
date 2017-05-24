@@ -1,5 +1,6 @@
 <template>
 <div class="panel panel-default">
+  <Navbar></Navbar>
   <!-- Default panel contents -->
   <div class="panel-heading">Panel heading</div>
   <div class="panel-body">
@@ -16,3 +17,9 @@
   </ul>
 </div>
 </template>
+<script>
+  import Navbar from './Navbar.vue';
+  export default {
+    components: { 'Navbar': Navbar }
+  }
+</script>

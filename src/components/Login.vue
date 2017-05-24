@@ -1,12 +1,14 @@
 <template>
 <div class="container">
+    <br>
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
             <h1 class="text-center">Ingreso Clientes</h1>
             <div class="account-wall">
                 <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                     alt="">
-                <form class="form-signin">
+                    {{error}}
+                <form class="form-signin" v-on:submit.prevent>
                 <input v-model="info.user" type="text" class="form-control" placeholder="Usuario" required autofocus>
                 <input v-model="info.password" type="password" class="form-control" placeholder="Password" required>
                 <button class="btn btn-lg btn-primary btn-block" v-on:click="login()">
@@ -100,29 +102,29 @@ display: block;
 }
 </style>
 <script>
-  
+
   export default {
     data() {
       return {
+        error: '',
         info: {
             user: '',
-            password: ''            
+            password: ''
         }
       }
     },
     methods: {
       login () {
         var data = JSON.stringify(this.info);
-              
         this.$http.post('/api/login', data)
         .then(function(res){
-        console.log(res);
-                if(res.error){
-                    alert(res.err);
+                if(res.body.error){
+                    this.error = res.body.msg;
                 }else{
-                    alert('ingreso');
+                    console.log(res.body.user);
+                    window.localStorage.setItem('user',JSON.stringify(res.body.user));
+                    this.$router.push('/');
                 }
-                
             })
       }
     }

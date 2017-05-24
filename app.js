@@ -68,7 +68,7 @@ app.post('/api/login', function(req, res) {
     var name = req.body.user;
     var pass = req.body.password;
 
-    User.findOne({ username: name}, function(error, user){        
+    /*User.findOne({ username: name}, function(error, user){
          if(error){
             return res.json({'error': true, 'err': 'Usuario inexistente'});
          }else{
@@ -81,16 +81,28 @@ app.post('/api/login', function(req, res) {
               }
             }
          }
-      });
+      });*/
+
+      User.findOne({"username": name}, function (err, user) {
+              if (err) {
+                  return res.json({'error': true, 'msg': 'Error busqueda'});
+              }
+              if (user) {  // Search could come back empty, so we should protect against sending nothing back
+                  return res.json({'error': false, 'user': user});
+              } else {  // In case no kitten was found with the given query
+                  return res.json({'error': true, 'msg': 'Usuario incorrecto'});
+              }
+          }
+      );
 });
 
 app.post('/api/updatemessage', function(req, res) {
-  Message.findById(req.body.iduser, function (err, ms) {  
+  Message.findById(req.body.iduser, function (err, ms) {
     // Handle any possible database errors
     if (err) {
         res.status(500).send(err);
     } else {
-        mensaje = req.body;        
+        mensaje = req.body;
         // Update each attribute with any possible attribute that may have been submitted in the body of the request
         // If that attribute isn't in the request body, default back to whatever it was before.
         ms.user = mensaje.user;

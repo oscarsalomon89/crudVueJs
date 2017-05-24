@@ -17,7 +17,7 @@ Vue.use(VueResource)
   next()
 })*/
 
-export default new Router({
+var routerApp = new Router({
   mode: 'history',
   routes: [
     {
@@ -47,4 +47,12 @@ export default new Router({
       component: Contact
     }
   ]
-})
+});
+
+/*routerApp.beforeEach(function (transition) {
+        // if route requires auth and user isn't authenticated
+        alert('hola');
+        return;
+})*/
+
+export default routerApp;

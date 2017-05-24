@@ -1,5 +1,8 @@
 <template>
+  <div>
+  <Navbar></Navbar>
   <div class="jumbotron">
+
     <h1>Hello Vue</h1>
     <p>
       <strong>
@@ -8,4 +11,11 @@
       </strong>
     </p>
   </div>
+  </div>
 </template>
+<script>
+  import Navbar from './Navbar.vue';
+  export default {
+    components: { 'Navbar': Navbar }
+  }
+</script>
