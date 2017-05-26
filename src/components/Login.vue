@@ -102,11 +102,13 @@ display: block;
 }
 </style>
 <script>
+  import auth from '../auth/auth.js';
 
   export default {
     data() {
       return {
         error: '',
+        authenticated: false,
         info: {
             user: '',
             password: ''
@@ -116,17 +118,13 @@ display: block;
     methods: {
       login () {
         var data = JSON.stringify(this.info);
-        this.$http.post('/api/login', data)
-        .then(function(res){
-                if(res.body.error){
-                    this.error = res.body.msg;
-                }else{
-                    console.log(res.body.user);
-                    window.localStorage.setItem('user',JSON.stringify(res.body.user));
-                    this.$router.push('/');
-                }
-            })
-      }
+        auth.login(this,data);        
+      },
+      logout() {
+            localStorage.removeItem('user')
+            this.authenticated = false
+            this.$router.push('/login')
+          }
     }
   }
 </script>

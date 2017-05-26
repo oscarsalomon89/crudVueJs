@@ -87,8 +87,11 @@ app.post('/api/login', function(req, res) {
               if (err) {
                   return res.json({'error': true, 'msg': 'Error busqueda'});
               }
-              if (user) {  // Search could come back empty, so we should protect against sending nothing back
-                  return res.json({'error': false, 'user': user});
+              if (user) {
+                  if (bcrypt.compareSync(pass,user.password)) {
+                      return res.json({'error': false, 'user': user});
+                  }
+                  return res.json({'error': true, 'msg': 'Contraseña incorrecta'});
               } else {  // In case no kitten was found with the given query
                   return res.json({'error': true, 'msg': 'Usuario incorrecto'});
               }
