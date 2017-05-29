@@ -17,10 +17,26 @@
                 <li id="navAbout"><router-link to="/about">About</router-link></li>
                 <li id="navContact"><router-link to="/contact">Contact</router-link></li>
               </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="./">Default <span class="sr-only">(current)</span></a></li>
+              <ul class="nav navbar-nav navbar-right" v-if="authenticated">
+                <li><a @click="logout()">Logout <span class="sr-only">(current)</span></a></li>
               </ul>
             </div><!--/.nav-collapse -->
           </div><!--/.container-fluid -->
         </nav>
 </template>
+<script>
+ import auth from '../auth/auth.js';
+
+ export default {
+   data() {
+     return {
+       authenticated: localStorage.getItem('id_token')
+     }
+   },
+   methods: {
+     logout() {
+       auth.logout()
+     }
+   }
+ }
+ </script>

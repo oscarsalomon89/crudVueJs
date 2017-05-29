@@ -6,6 +6,9 @@ var bodyParser = require('body-parser');
 var mongoose    = require('mongoose');
 var bcrypt  = require('bcrypt-nodejs');
 var router = express.Router();
+
+var service = require('./services/services.js');
+
 var app = express();
 
 var Message = require('./models/message');
@@ -68,28 +71,14 @@ app.post('/api/login', function(req, res) {
     var name = req.body.user;
     var pass = req.body.password;
 
-    /*User.findOne({ username: name}, function(error, user){
-         if(error){
-            return res.json({'error': true, 'err': 'Usuario inexistente'});
-         }else{
-            if (user) {
-              if (bcrypt.compareSync(pass,user.password)) {
-                  return res.json({'error': false, 'user': user});
-              }
-              else {
-                return res.json({'error': true, 'err': 'Contraseña incorrecta'});
-              }
-            }
-         }
-      });*/
-
       User.findOne({"username": name}, function (err, user) {
               if (err) {
                   return res.json({'error': true, 'msg': 'Error busqueda'});
               }
               if (user) {
                   if (bcrypt.compareSync(pass,user.password)) {
-                      return res.json({'error': false, 'user': user});
+                      var token = service.createToken(user._id);
+                      return res.json({'error': false, 'token': token});
                   }
                   return res.json({'error': true, 'msg': 'Contraseña incorrecta'});
               } else {  // In case no kitten was found with the given query

@@ -7,6 +7,7 @@ import About from '../components/About.vue'
 import Contact from '../components/Contact.vue'
 import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
+import auth from '../auth/auth.js'
 
 Vue.use(Router)
 Vue.use(VueResource)
@@ -20,6 +21,7 @@ Vue.use(VueResource)
 var routerApp = new Router({
   mode: 'history',
   routes: [
+    { path: '*', redirect: '/' },
     {
       path: '/',
       name: 'Home',
@@ -38,16 +40,20 @@ var routerApp = new Router({
     {
       path: '/about',
       name: 'About',
+      beforeEnter: function(to, from, next) {
+                auth.requireAuth(to, from, next);
+            },
       component: About
-    }
-    ,
+    },
     {
       path: '/contact',
       name: 'Contact',
+      //beforeEnter: requireAuth,
       component: Contact
     }
   ]
 });
+
 
 /*routerApp.beforeEach(function (transition) {
         // if route requires auth and user isn't authenticated

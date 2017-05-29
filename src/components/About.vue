@@ -18,7 +18,9 @@
 </div>
 </template>
 <script>
+   import auth from '../auth/auth.js';
   import Navbar from './Navbar.vue';
+
   export default {
     components: { 'Navbar': Navbar }
   }

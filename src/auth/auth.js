@@ -1,42 +1,34 @@
 import router from '../router'
 
-// URL and endpoint constants
-const API_URL = 'http://localhost:3001/'
-const LOGIN_URL = '/api/login'
-const SIGNUP_URL = API_URL + 'users/'
+// User object will let us check authentication status
+var authenticated = false;
 
 export default {
-
-  // User object will let us check authentication status
-  user: {
-    authenticated: false
-  },
-
+  auth: false,
   // Send a request to the login URL and save the returned JWT
   login(context,data) {
-
     context.$http.post('/api/login', data)
         .then(function(res){
                 if(res.body.error){
                     context.error = res.body.msg;
                 }else{
-                    localStorage.setItem('id_token',res.body.user._id);
-                    //this.user.authenticated = true;
-                    //this.$router.push('/');
+                    var token = res.body.token;
+                    localStorage.setItem('id_token',token);
+                    this.auth = true;
                     router.push('/');
                 }
             })
   },
 
   signup(context, creds, redirect) {
-    context.$http.post(SIGNUP_URL, creds, (data) => {
+    context.$http.post('/api/adduser', creds, (data) => {
       localStorage.setItem('id_token', data.id_token)
       localStorage.setItem('access_token', data.access_token)
 
-      this.user.authenticated = true
+      //this.authenticated = true
 
       if(redirect) {
-        router.go(redirect)        
+        router.go(redirect)
       }
 
     }).error((err) => {
@@ -46,24 +38,25 @@ export default {
 
   // To log out, we just need to remove the token
   logout() {
-    localStorage.removeItem('id_token')
-    this.user.authenticated = false
+    localStorage.removeItem('id_token');
+    router.push('/login');
   },
 
-  checkAuth() {
-    var jwt = localStorage.getItem('id_token')
-    if(jwt) {
-      this.user.authenticated = true
-    }
-    else {
-      this.user.authenticated = false      
+  requireAuth(to, from, next){
+    var ls = localStorage.getItem('id_token');
+    if(ls){
+      next();
+    }else{
+      next('/login');
     }
   },
 
-  // The object to be passed as a header for authenticated requests
-  getAuthHeader() {
-    return {
-      'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+  islogin(to, from, next) {
+    var lss = localStorage.getItem('id_token');
+    if(lss){
+      next('/');
+    }else{
+      next('/login');
     }
   }
 }

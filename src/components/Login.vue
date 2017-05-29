@@ -108,7 +108,6 @@ display: block;
     data() {
       return {
         error: '',
-        authenticated: false,
         info: {
             user: '',
             password: ''
@@ -118,12 +117,10 @@ display: block;
     methods: {
       login () {
         var data = JSON.stringify(this.info);
-        auth.login(this,data);        
+        auth.login(this,data);
       },
       logout() {
-            localStorage.removeItem('user')
-            this.authenticated = false
-            this.$router.push('/login')
+            auth.logout();
           }
     }
   }
