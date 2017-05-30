@@ -54,9 +54,9 @@ export default {
   islogin(to, from, next) {
     var lss = localStorage.getItem('id_token');
     if(lss){
-      next('/');
+      next('/home');
     }else{
-      next('/login');
+      next();
     }
   }
 }

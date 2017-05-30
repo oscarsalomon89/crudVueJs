@@ -21,15 +21,21 @@ Vue.use(VueResource)
 var routerApp = new Router({
   mode: 'history',
   routes: [
-    { path: '*', redirect: '/' },
+    { path: '*', redirect: '/home' },
     {
-      path: '/',
+      path: '/home',
       name: 'Home',
+      beforeEnter: function(to, from, next) {
+                auth.requireAuth(to, from, next);
+            },
       component: Home
     },
     {
       path: '/login',
       name: 'Login',
+      beforeEnter: function(to, from, next) {
+                auth.islogin(to, from, next);
+            },
       component: Login
     },
     {
@@ -48,17 +54,12 @@ var routerApp = new Router({
     {
       path: '/contact',
       name: 'Contact',
-      //beforeEnter: requireAuth,
+      beforeEnter: function(to, from, next) {
+                auth.requireAuth(to, from, next);
+            },
       component: Contact
     }
   ]
 });
-
-
-/*routerApp.beforeEach(function (transition) {
-        // if route requires auth and user isn't authenticated
-        alert('hola');
-        return;
-})*/
 
 export default routerApp;

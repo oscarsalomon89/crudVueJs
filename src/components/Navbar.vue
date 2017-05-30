@@ -13,7 +13,7 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li id="navLogin"><router-link to="/login">Login</router-link></li>
-                <li id="navHome" class="active"><router-link to="/">Home</router-link></li>
+                <li id="navHome" class="active"><router-link to="/home">Home</router-link></li>
                 <li id="navAbout"><router-link to="/about">About</router-link></li>
                 <li id="navContact"><router-link to="/contact">Contact</router-link></li>
               </ul>

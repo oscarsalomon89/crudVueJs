@@ -139,10 +139,16 @@ app.post('/api/editmessage',function(req, res) {
     });
 });
 
-app.get('*', function(req, res) {
+app.get('/', function(req, res) {
 	res.sendFile('index.html', {
 		root: './views'
 	});
+});
+
+app.get('*', function(req, res) {
+  res.sendFile('clientes/index.html', {
+    root: './views'
+  });
 });
 
 // catch 404 and forward to error handler
