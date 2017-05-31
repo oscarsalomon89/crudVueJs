@@ -12,10 +12,10 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                <li id="navLogin"><router-link to="/login">Login</router-link></li>
-                <li id="navHome" class="active"><router-link to="/home">Home</router-link></li>
-                <li id="navAbout"><router-link to="/about">About</router-link></li>
-                <li id="navContact"><router-link to="/contact">Contact</router-link></li>
+                <li id="navHome" class="active"><router-link to="/inicio">Inicio</router-link></li>
+                <li id="navAbout"><router-link to="/productos">Productos</router-link></li>
+                <li id="navContact"><router-link to="/pedidos">Pedidos</router-link></li>
+                <li id="navContact"><router-link to="/consultas">Consultas</router-link></li>
               </ul>
               <ul class="nav navbar-nav navbar-right" v-if="authenticated">
                 <li><a @click="logout()">Logout <span class="sr-only">(current)</span></a></li>

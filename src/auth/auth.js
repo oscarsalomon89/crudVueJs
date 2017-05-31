@@ -15,7 +15,7 @@ export default {
                     var token = res.body.token;
                     localStorage.setItem('id_token',token);
                     this.auth = true;
-                    router.push('/');
+                    router.push('/inicio');
                 }
             })
   },
@@ -54,7 +54,7 @@ export default {
   islogin(to, from, next) {
     var lss = localStorage.getItem('id_token');
     if(lss){
-      next('/home');
+      next('/inicio');
     }else{
       next();
     }

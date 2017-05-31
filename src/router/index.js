@@ -5,6 +5,7 @@ import VueResource from 'vue-resource'
 import Home from '../components/Home.vue'
 import About from '../components/About.vue'
 import Contact from '../components/Contact.vue'
+import Pedidos from '../components/Pedidos.vue'
 import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
 import auth from '../auth/auth.js'
@@ -21,9 +22,9 @@ Vue.use(VueResource)
 var routerApp = new Router({
   mode: 'history',
   routes: [
-    { path: '*', redirect: '/home' },
+    { path: '*', redirect: '/inicio' },
     {
-      path: '/home',
+      path: '/inicio',
       name: 'Home',
       beforeEnter: function(to, from, next) {
                 auth.requireAuth(to, from, next);
@@ -44,7 +45,7 @@ var routerApp = new Router({
       component: Signup
     },
     {
-      path: '/about',
+      path: '/productos',
       name: 'About',
       beforeEnter: function(to, from, next) {
                 auth.requireAuth(to, from, next);
@@ -52,7 +53,16 @@ var routerApp = new Router({
       component: About
     },
     {
-      path: '/contact',
+      path: '/pedidos',
+      name: 'Pedidos',
+      beforeEnter: function(to, from, next) {
+                auth.requireAuth(to, from, next);
+            },
+      component: Pedidos
+    }
+    ,
+    {
+      path: '/consultas',
       name: 'Contact',
       beforeEnter: function(to, from, next) {
                 auth.requireAuth(to, from, next);
