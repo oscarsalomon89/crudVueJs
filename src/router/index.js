@@ -13,12 +13,6 @@ import auth from '../auth/auth.js'
 Vue.use(Router)
 Vue.use(VueResource)
 
-/*Vue.http.interceptors.push((request, next) => {
-  request.headers['Authorization'] = 'hello'
-  request.headers['Accept'] = 'application/json'
-  next()
-})*/
-
 var routerApp = new Router({
   mode: 'history',
   routes: [
@@ -64,9 +58,6 @@ var routerApp = new Router({
     {
       path: '/consultas',
       name: 'Contact',
-      beforeEnter: function(to, from, next) {
-                auth.requireAuth(to, from, next);
-            },
       component: Contact
     }
   ]

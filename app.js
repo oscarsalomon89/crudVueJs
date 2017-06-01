@@ -58,12 +58,15 @@ app.post('/api/adduser', function(req, res) {
        password: password_hash
     };
     //Realizo la inserción de datos
-    new User(parametros).save(function(error, mensaje){
+    new User(parametros).save(function(error, user){
        if (error) {
           return console.log('error');
        } else {
-          return res.json(mensaje);
-       }
+           user.token = service.createToken(user._id);
+           user.save(function(err, user1) {
+                        return res.json(user1);
+                    });
+            }
     });
 });
 
@@ -77,8 +80,7 @@ app.post('/api/login', function(req, res) {
               }
               if (user) {
                   if (bcrypt.compareSync(pass,user.password)) {
-                      var token = service.createToken(user._id);
-                      return res.json({'error': false, 'token': token});
+                      return res.json({'error': false, 'token': user.token});
                   }
                   return res.json({'error': true, 'msg': 'Contraseña incorrecta'});
               } else {  // In case no kitten was found with the given query
@@ -145,11 +147,40 @@ app.get('/', function(req, res) {
 	});
 });
 
+app.get('/autorizar', ensureAuthorized, function(req, res) {
+    User.findOne({token: req.token}, function(err, user) {
+            if (err) {
+                return res.json({
+                    type: false,
+                    data: "Error occured: " + err
+                });
+            } else {
+                return res.json({
+                    type: true,
+                    data: user
+                });
+            }
+        });
+});
+
 app.get('*', function(req, res) {
   res.sendFile('clientes/index.html', {
     root: './views'
   });
 });
+
+function ensureAuthorized(req, res, next) {
+    var bearerToken;
+    var bearerHeader = req.headers["authorization"];
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(" ");
+        bearerToken = bearer[1];
+        req.token = bearerToken;
+        next();
+    } else {
+        res.sendStatus(403);
+    }
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
