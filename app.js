@@ -170,12 +170,9 @@ app.get('*', function(req, res) {
 });
 
 function ensureAuthorized(req, res, next) {
-    var bearerToken;
     var bearerHeader = req.headers["authorization"];
     if (typeof bearerHeader !== 'undefined') {
-        var bearer = bearerHeader.split(" ");
-        bearerToken = bearer[1];
-        req.token = bearerToken;
+        req.token = bearerHeader;
         next();
     } else {
         res.sendStatus(403);

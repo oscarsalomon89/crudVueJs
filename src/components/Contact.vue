@@ -31,14 +31,6 @@
 <script>
   import Navbar from './Navbar.vue';
   export default {
-    components: {'Navbar': Navbar },
-    beforeCreate: function () {
-      this.$http.get('/autorizar', {headers: {'Authorization': localStorage.getItem('id_token')}})
-        .then(function(res){
-                if(res.body.data == null){
-                    this.$router.push('/login');
-                }
-            })
-    }
+    components: {'Navbar': Navbar }
   }
 </script>
