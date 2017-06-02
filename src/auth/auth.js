@@ -1,4 +1,5 @@
 import router from '../router'
+import Vue from 'vue'
 
 // User object will let us check authentication status
 var authenticated = false;
@@ -43,20 +44,24 @@ export default {
   },
 
   requireAuth(to, from, next){
-    var ls = localStorage.getItem('id_token');
-    if(ls){
-      next();
-    }else{
-      next('/login');
-    }
+    Vue.http.get('/autorizar', {headers: {'Authorization': localStorage.getItem('id_token')}})
+        .then(function(res){
+                if(res.body.data == null){
+                    next('/login');
+                }else{
+                  next()
+                }
+            })
   },
 
   islogin(to, from, next) {
-    var lss = localStorage.getItem('id_token');
-    if(lss){
-      next('/inicio');
-    }else{
-      next();
-    }
+    Vue.http.get('/autorizar', {headers: {'Authorization': localStorage.getItem('id_token')}})
+        .then(function(res){
+                if(res.body.data == null){
+                    next();
+                }else{
+                  next('/inicio')
+                }
+            })
   }
 }

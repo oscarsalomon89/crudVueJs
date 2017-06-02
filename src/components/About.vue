@@ -1,5 +1,5 @@
 <template>
-<div class="panel panel-default">
+<div>
   <Navbar></Navbar>
   <!-- Default panel contents -->
   <div class="panel-heading">Panel heading</div>
