@@ -17,7 +17,7 @@ var User = require('./models/user');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
-mongoose.connect('mongodb://localhost/vueDb');
+//mongoose.connect('mongodb://localhost/vueDb');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
