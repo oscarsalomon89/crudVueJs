@@ -5,8 +5,9 @@
   "author": "osalomon <osalomon@elnorte.com.ar>",
   "private": true,
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run webpack\"",
-    "server": "nodemon ./bin/www",
+    "start": "concurrently \"npm run devserver\" \"npm run webpack\"",
+    "server": "node ./bin/www",
+    "devserver": "nodemon ./bin/www",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "webpack": "webpack --watch --config webpack.config.js"
