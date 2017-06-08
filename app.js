@@ -17,7 +17,7 @@ var User = require('./models/user');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
-//mongoose.connect('mongodb://localhost/vueDb');
+mongoose.connect('mongodb://localhost/vueDb');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -64,7 +64,10 @@ app.post('/api/adduser', function(req, res) {
        } else {
            user.token = service.createToken(user._id);
            user.save(function(err, user1) {
-                        return res.json(user1);
+                        return res.json({
+                                error: false,
+                                data: user1
+                            });
                     });
             }
     });
@@ -130,6 +133,18 @@ app.get('/api/messages', function(req, res) {
               console.log('error');
            }else{
                return res.json(messages);
+           }
+        });
+});
+
+app.get('/api/users', function(req, res) {
+    User.find()
+        .sort({username: 'asc'})
+        .exec(function(error,users){
+          if(error){
+              console.log('error');
+           }else{
+               return res.json(users);
            }
         });
 });

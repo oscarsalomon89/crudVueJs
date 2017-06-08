@@ -8,6 +8,7 @@ import Contact from '../components/Contact.vue'
 import Pedidos from '../components/Pedidos.vue'
 import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
+import Clientes from '../components/Clientes.vue'
 import auth from '../auth/auth.js'
 
 Vue.use(Router)
@@ -24,6 +25,14 @@ var routerApp = new Router({
                 auth.requireAuth(to, from, next);
       },
       component: Home
+    },
+    {
+      path: '/clientes',
+      name: 'Clientes',
+      beforeEnter: function(to, from, next) {
+                auth.requireAuth(to, from, next);
+      },
+      component: Clientes
     },
     {
       path: '/login',

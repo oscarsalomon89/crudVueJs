@@ -13,7 +13,7 @@
       
       <br><br><button v-on:click="addUser()" type="button">Signup</button>
     </form>
-    <br><span id="msg"></span>
+    <br><span>{{messageFin}}</span>
   </div>
 </template>
 <script>
@@ -31,11 +31,19 @@
     },
     methods: {
       addUser () {
+        if(this.info.user=='' || this.info.password== '' || this.info.email==''){
+          this.messageFin = 'Datos incompletos';
+          return;
+        }
+
         var data = JSON.stringify(this.info);
               
         this.$http.post('/api/adduser', data)
         .then(function(res){
-                this.messageFin = res.data.user
+              if(!res.data.error){
+                alert('Usuario creado correctamente');
+                this.$router.push('/login');
+              }                
             })
       }
     }

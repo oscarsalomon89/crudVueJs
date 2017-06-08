@@ -13,6 +13,7 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li id="navHome" class="active"><router-link to="/inicio">Inicio</router-link></li>
+                <li id="navCli"><router-link to="/clientes">Clientes</router-link></li>
                 <li id="navAbout"><router-link to="/productos">Productos</router-link></li>
                 <li id="navContact"><router-link to="/pedidos">Pedidos</router-link></li>
                 <li id="navContact"><router-link to="/consultas">Consultas</router-link></li>
