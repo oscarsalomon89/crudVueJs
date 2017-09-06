@@ -25,6 +25,12 @@
       <div class="col-md-7">
           <tableMessages :listMessages="listMessages"></tableMessages>
         </div>
+        <ul is="transition-group">
+          <li v-for="msg in messages" class="msg" :key="msg['.key']">
+            <span>{{msg.user}} - {{msg.message}}</span>
+            <button v-on:click="removeMsg(msg)">X</button>
+          </li>
+        </ul>
     </div>
   </div>
   </div>
@@ -32,6 +38,20 @@
 <script>
   import Navbar from './Navbar.vue';
   import Table from './Table.vue';
+  import * as firebase from "firebase";
+
+var config = {
+  apiKey: "AIzaSyAKKZe2YgGwWfBGyqYg897jPBUbXLmrdVI",
+  authDomain: "appvuej.firebaseapp.com",
+  databaseURL: "https://appvuej.firebaseio.com",
+  projectId: "appvuej",
+  storageBucket: "appvuej.appspot.com",
+  messagingSenderId: "274503393068"
+};
+  
+firebase.initializeApp(config)
+// Get a reference to the database service
+var messagesRef = firebase.database().ref('messages')
 
   export default {
     components: { 'tableMessages': Table,'Navbar': Navbar },
@@ -46,6 +66,9 @@
         messageFinal: ''
       }
     },
+    firebase: {
+      messages: messagesRef
+    },
     created: function () {
       this.getMessages ();
     },
@@ -57,20 +80,25 @@
           return;
         }
 
-        this.$http.post('/api/addmessage', data)
+        messagesRef.push(this.info)
+
+        /*this.$http.post('/api/addmessage', data)
         .then(function(res){
                 this.getMessages ();
 				        // set the data after ajax request
                 this.info.message = ''
                 this.info.user = ''
                 this.messageFinal = res.data.body
-            })
+            })*/
       },
       getMessages () {
         this.$http.get('/api/messages')
         .then(function(res){
                 this.listMessages = res.data;
             })
+      },
+      removeMsg(user) {
+        messagesRef.child(user['.key']).remove()
       },
       editMessage (id) {
         this.$http.post('/api/editmessage',[id])
