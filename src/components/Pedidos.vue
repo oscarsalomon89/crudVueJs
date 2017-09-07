@@ -23,14 +23,13 @@
         <h3>{{messageFinal}}</h3>
       </div>
       <div class="col-md-7">
-          <tableMessages :listMessages="listMessages"></tableMessages>
+          <ul>
+            <li v-for="msg in messages" class="msg" :key="msg['.key']">
+              <span>{{msg.user}} - {{msg.message}}</span>
+              <button v-on:click="removeMsg(msg)">X</button>
+            </li>
+          </ul>
         </div>
-        <ul is="transition-group">
-          <li v-for="msg in messages" class="msg" :key="msg['.key']">
-            <span>{{msg.user}} - {{msg.message}}</span>
-            <button v-on:click="removeMsg(msg)">X</button>
-          </li>
-        </ul>
     </div>
   </div>
   </div>
@@ -49,9 +48,10 @@ var config = {
   messagingSenderId: "274503393068"
 };
   
-firebase.initializeApp(config)
+var app = firebase.initializeApp(config)
+var db = app.database()
 // Get a reference to the database service
-var messagesRef = firebase.database().ref('messages')
+var messagesRef = db.ref('messages')
 
   export default {
     components: { 'tableMessages': Table,'Navbar': Navbar },
@@ -63,24 +63,32 @@ var messagesRef = firebase.database().ref('messages')
             iduser: ''
         },
         listMessages: [],
-        messageFinal: ''
+        messageFinal: '',
+        messages: []
       }
     },
-    firebase: {
-      messages: messagesRef
+    firebase() {
+      return {
+        messages: db.ref('messages')
+      }
     },
     created: function () {
       this.getMessages ();
     },
     methods: {
-      addMessage () {
-        var data = JSON.stringify(this.info);
+      addMessage () {        
         if(this.info.iduser != ''){
           this.updateMessage();
           return;
         }
 
-        messagesRef.push(this.info)
+        var msg = {
+                    user: this.info.user,
+                    message: this.info.message
+                  }
+
+
+        messagesRef.push(msg)
 
         /*this.$http.post('/api/addmessage', data)
         .then(function(res){
@@ -109,8 +117,9 @@ var messagesRef = firebase.database().ref('messages')
             })
       }
       ,
-      updateMessage() {
-        var data = JSON.stringify(this.info);
+      updateMessage(msg) {
+        messagesRef.child(msg['.key']).update({"songs": newCount + 1})
+        /*var data = JSON.stringify(this.info);
         this.$http.post('/api/updatemessage',data)
         .then(function(res){
                 this.getMessages();
@@ -118,7 +127,7 @@ var messagesRef = firebase.database().ref('messages')
                 this.info.message = ''
                 this.info.user = ''
                 this.messageFinal = 'Modificado'
-            })
+            })*/
       }
     }
   }
