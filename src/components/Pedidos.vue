@@ -26,6 +26,7 @@
           <ul>
             <li v-for="msg in messages" class="msg" :key="msg['.key']">
               <span>{{msg.user}} - {{msg.message}}</span>
+              <button v-on:click="editMessage(msg)">Edit</button>
               <button v-on:click="removeMsg(msg)">X</button>
             </li>
           </ul>
@@ -63,8 +64,7 @@ var messagesRef = db.ref('messages')
             iduser: ''
         },
         listMessages: [],
-        messageFinal: '',
-        messages: []
+        messageFinal: ''
       }
     },
     firebase() {
@@ -87,17 +87,9 @@ var messagesRef = db.ref('messages')
                     message: this.info.message
                   }
 
-
         messagesRef.push(msg)
-
-        /*this.$http.post('/api/addmessage', data)
-        .then(function(res){
-                this.getMessages ();
-				        // set the data after ajax request
-                this.info.message = ''
-                this.info.user = ''
-                this.messageFinal = res.data.body
-            })*/
+        this.info.user = '';
+        this.info.message = '';
       },
       getMessages () {
         this.$http.get('/api/messages')
@@ -108,17 +100,19 @@ var messagesRef = db.ref('messages')
       removeMsg(user) {
         messagesRef.child(user['.key']).remove()
       },
-      editMessage (id) {
-        this.$http.post('/api/editmessage',[id])
-        .then(function(res){
-                this.info.iduser = res.data._id;
-                this.info.user = res.data.user;
-                this.info.message = res.data.body;
-            })
+      editMessage (msg) {
+          this.info.iduser = msg['.key'];
+          this.info.user = msg.user;
+          this.info.message = msg.message;
       }
       ,
-      updateMessage(msg) {
-        messagesRef.child(msg['.key']).update({"songs": newCount + 1})
+      updateMessage() {
+        messagesRef.child(this.info.iduser).update({"user": this.info.user,
+                                                    "message":this.info.message});
+
+        this.info.iduser = '';
+        this.info.user = '';
+        this.info.message = '';
         /*var data = JSON.stringify(this.info);
         this.$http.post('/api/updatemessage',data)
         .then(function(res){
