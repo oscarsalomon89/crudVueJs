@@ -17,7 +17,8 @@
   </div>
 </template>
 <script>
-  
+  import * as firebase from "firebase";
+
   export default {
     data() {
       return {
@@ -36,15 +37,12 @@
           return;
         }
 
-        var data = JSON.stringify(this.info);
-              
-        this.$http.post('/api/adduser', data)
-        .then(function(res){
-              if(!res.data.error){
-                alert('Usuario creado correctamente');
-                this.$router.push('/login');
-              }                
-            })
+        firebase.auth().createUserWithEmailAndPassword(this.info.email,this.info.password).
+            catch(function(error) {
+                console.log(error);
+                var errorCode = error.code;
+                alert(error.message);
+            });
       }
     }
   }

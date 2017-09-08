@@ -27,26 +27,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/api/addmessage', function(req, res) {
-  Message.count({},function(err,cantidad) {
-    //Parámetros para la inserción de datos
-    var valorId = (cantidad + 1);
-    var parametros = {
-       id: valorId,
-       user: req.body.user,
-       body: req.body.message,
-       time: new Date()
-    };
-    //Realizo la inserción de datos
-    new Message(parametros).save(function(error, mensaje){
-       if (error) {
-          return console.log('error');
-       } else {
-          return res.json(mensaje);
-       }
-    });
-  })
-});
 
 app.post('/api/adduser', function(req, res) {
     var salt = bcrypt.genSaltSync();

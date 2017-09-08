@@ -39,15 +39,7 @@
   import Navbar from './Navbar.vue';
   import Table from './Table.vue';
   import * as firebase from "firebase";
-
-var config = {
-  apiKey: "AIzaSyAKKZe2YgGwWfBGyqYg897jPBUbXLmrdVI",
-  authDomain: "appvuej.firebaseapp.com",
-  databaseURL: "https://appvuej.firebaseio.com",
-  projectId: "appvuej",
-  storageBucket: "appvuej.appspot.com",
-  messagingSenderId: "274503393068"
-};
+  import {config} from '../helpers/firebaseConfig'
   
 var app = firebase.initializeApp(config)
 var db = app.database()

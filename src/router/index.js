@@ -21,9 +21,6 @@ var routerApp = new Router({
     {
       path: '/inicio',
       name: 'Home',
-      beforeEnter: function(to, from, next) {
-                auth.requireAuth(to, from, next);
-      },
       component: Home
     },
     {
@@ -37,9 +34,6 @@ var routerApp = new Router({
     {
       path: '/login',
       name: 'Login',
-      beforeEnter: function(to, from, next) {
-                auth.islogin(to, from, next);
-      },
       component: Login
     },
     {
@@ -80,14 +74,14 @@ var routerApp = new Router({
 
 //Esta funcion se ejecuta antes de redireccionar
 /*routerApp.beforeEach((to, from, next) => {
-    Vue.http.get('/autorizar', {headers: {'Authorization': localStorage.getItem('id_token')}})
-        .then(function(res){
-                if(res.body.data == null){
-                    next();
-                }else{
-                  next()
-                }
-            })
+    firebase.initializeApp(config);
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        next();
+      } else {
+        next('/login')
+      }
+     })
 })*/
 
 export default routerApp;

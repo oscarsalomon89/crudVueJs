@@ -7,10 +7,10 @@
             <div class="account-wall">
                 <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
                     alt="">
-                    <div style="width:80%;margin-left:10%;" v-if="error != ''" class="alert alert-danger text-center" role="alert">
+                    <div style="width:80%;margin-left:10%;" v-if="errorMsg != ''" class="alert alert-danger text-center" role="alert">
                       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                       <span class="sr-only">Error:</span>
-                      {{error}}
+                      {{errorMsg}}
                     </div>
                 <form class="form-signin" v-on:submit.prevent>
                 <input v-model="info.user" type="text" class="form-control" placeholder="Usuario" required autofocus>
@@ -107,11 +107,12 @@ display: block;
 </style>
 <script>
   import auth from '../auth/auth.js';
+  import * as firebase from "firebase";
 
   export default {
     data() {
       return {
-        error: '',
+        errorMsg: '',
         info: {
             user: '',
             password: ''
@@ -120,8 +121,13 @@ display: block;
     },
     methods: {
       login () {
-        var data = JSON.stringify(this.info);
-        auth.login(this,data);
+        /*var data = JSON.stringify(this.info);
+        auth.login(this,data);*/
+        firebase.auth().signInWithEmailAndPassword(this.info.user,this.info.password).
+            catch(function(error) {
+                var errorCode = error.code;
+                alert(error.message);
+            });        
       },
       logout() {
             auth.logout();
