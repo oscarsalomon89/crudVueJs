@@ -10,6 +10,7 @@ import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
 import Clientes from '../components/Clientes.vue'
 import auth from '../auth/auth.js'
+import * as firebase from "firebase";
 
 Vue.use(Router)
 Vue.use(VueResource)
@@ -26,9 +27,9 @@ var routerApp = new Router({
     {
       path: '/clientes',
       name: 'Clientes',
-      beforeEnter: function(to, from, next) {
+      /*beforeEnter: function(to, from, next) {
                 auth.requireAuth(to, from, next);
-      },
+      },*/
       component: Clientes
     },
     {
@@ -39,49 +40,44 @@ var routerApp = new Router({
     {
       path: '/signup',
       name: 'Signup',
-      beforeEnter: function(to, from, next) {
-                auth.islogin(to, from, next);
-      },
       component: Signup
     },
     {
       path: '/productos',
       name: 'About',
-      beforeEnter: function(to, from, next) {
-                auth.requireAuth(to, from, next);
-      },
       component: About
     },
     {
       path: '/pedidos',
       name: 'Pedidos',
-      beforeEnter: function(to, from, next) {
-                auth.requireAuth(to, from, next);
-      },
       component: Pedidos
-    }
-    ,
+    },
     {
       path: '/consultas',
       name: 'Contact',
-      beforeEnter: function(to, from, next) {
-                auth.requireAuth(to, from, next);
-      },
       component: Contact
     }
   ]
 });
 
 //Esta funcion se ejecuta antes de redireccionar
-/*routerApp.beforeEach((to, from, next) => {
-    firebase.initializeApp(config);
+routerApp.beforeEach((to, from, next) => {    
     firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
-        next();
+      if(user) { 
+        if(to.name != 'Login'){
+          next();
+        }else{
+          next('/inicio');
+        }
       } else {
-        next('/login')
+        //No esta logueado
+        if(to.name == 'Login'){
+          next();
+        }else{
+          next('/login')
+        }
       }
      })
-})*/
+})
 
 export default routerApp;

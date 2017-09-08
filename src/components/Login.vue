@@ -108,7 +108,8 @@ display: block;
 <script>
   import auth from '../auth/auth.js';
   import * as firebase from "firebase";
-
+  import router from '../router'
+  
   export default {
     data() {
       return {
@@ -124,6 +125,9 @@ display: block;
         /*var data = JSON.stringify(this.info);
         auth.login(this,data);*/
         firebase.auth().signInWithEmailAndPassword(this.info.user,this.info.password).
+            then(function() {
+                router.push('/inicio');
+            }).
             catch(function(error) {
                 var errorCode = error.code;
                 alert(error.message);
