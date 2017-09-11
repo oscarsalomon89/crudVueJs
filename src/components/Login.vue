@@ -13,8 +13,8 @@
                       {{errorMsg}}
                     </div>
                 <form class="form-signin" v-on:submit.prevent>
-                <input v-model="info.user" type="text" class="form-control" placeholder="Usuario" required autofocus>
-                <input v-model="info.password" type="password" class="form-control" placeholder="Password" required>
+                <input v-model="user" type="text" class="form-control" placeholder="Usuario" required autofocus>
+                <input v-model="password" type="password" class="form-control" placeholder="Password" required>
                 <button class="btn btn-lg btn-primary btn-block" v-on:click="login()">
                     Ingresar</button>
                 <label class="checkbox pull-left">
@@ -107,31 +107,18 @@ display: block;
 </style>
 <script>
   import auth from '../auth/auth.js';
-  import * as firebase from "firebase";
-  import router from '../router'
   
   export default {
     data() {
       return {
         errorMsg: '',
-        info: {
-            user: '',
-            password: ''
-        }
+        user: '',
+        password: ''
       }
     },
     methods: {
       login () {
-        /*var data = JSON.stringify(this.info);
-        auth.login(this,data);*/
-        firebase.auth().signInWithEmailAndPassword(this.info.user,this.info.password).
-            then(function() {
-                router.push('/inicio');
-            }).
-            catch(function(error) {
-                var errorCode = error.code;
-                alert(error.message);
-            });        
+        auth.login(this);               
       },
       logout() {
             auth.logout();

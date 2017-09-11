@@ -10,7 +10,6 @@ import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
 import Clientes from '../components/Clientes.vue'
 import auth from '../auth/auth.js'
-import * as firebase from "firebase";
 
 Vue.use(Router)
 Vue.use(VueResource)
@@ -27,9 +26,6 @@ var routerApp = new Router({
     {
       path: '/clientes',
       name: 'Clientes',
-      /*beforeEnter: function(to, from, next) {
-                auth.requireAuth(to, from, next);
-      },*/
       component: Clientes
     },
     {
@@ -61,23 +57,8 @@ var routerApp = new Router({
 });
 
 //Esta funcion se ejecuta antes de redireccionar
-routerApp.beforeEach((to, from, next) => {    
-    firebase.auth().onAuthStateChanged((user) => {
-      if(user) { 
-        if(to.name != 'Login'){
-          next();
-        }else{
-          next('/inicio');
-        }
-      } else {
-        //No esta logueado
-        if(to.name == 'Login'){
-          next();
-        }else{
-          next('/login')
-        }
-      }
-     })
+routerApp.beforeEach((to, from, next) => {
+  auth.requireAuth(to, from, next);
 })
 
 export default routerApp;

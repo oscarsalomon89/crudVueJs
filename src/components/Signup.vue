@@ -37,12 +37,7 @@
           return;
         }
 
-        firebase.auth().createUserWithEmailAndPassword(this.info.email,this.info.password).
-            catch(function(error) {
-                console.log(error);
-                var errorCode = error.code;
-                alert(error.message);
-            });
+        auth.signup(this); 
       }
     }
   }

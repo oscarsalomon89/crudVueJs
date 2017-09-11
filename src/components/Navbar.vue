@@ -35,7 +35,6 @@
 <script>
  import auth from '../auth/auth.js';
  import router from '../router'
- import * as firebase from "firebase";
  
  export default {
    data() {
@@ -45,11 +44,7 @@
    },
    methods: {
      logout() {
-       firebase.auth().signOut().then(function() {
-          router.push('/login');
-        }).catch(function(error) {
-          // An error happened.
-        });
+       auth.logout();
      }
    }
  }
