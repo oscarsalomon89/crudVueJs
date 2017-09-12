@@ -39,10 +39,8 @@
   import Navbar from './Navbar.vue';
   import Table from './Table.vue';
   import * as firebase from "firebase";
-  import {config} from '../helpers/firebaseConfig'
+  import {db} from '../helpers/firebaseConfig'
   
-var app = firebase.initializeApp(config)
-var db = app.database()
 // Get a reference to the database service
 var messagesRef = db.ref('messages')
 
@@ -82,12 +80,6 @@ var messagesRef = db.ref('messages')
         messagesRef.push(msg)
         this.info.user = '';
         this.info.message = '';
-      },
-      getMessages () {
-        this.$http.get('/api/messages')
-        .then(function(res){
-                this.listMessages = res.data;
-            })
       },
       removeMsg(user) {
         messagesRef.child(user['.key']).remove()

@@ -1,45 +1,48 @@
 import Vue from 'vue'
+import {db} from '../helpers/firebaseConfig'
+
+var users = db.ref('users')
 
 export default {
   getClients (clientes) {
-    Vue.http.get('api/users',
-            ).then(response => {
-                clientes(response.data)
-            }, response => {
-                clientes([])
-            })
+    clientes(users)            
   },
 
   addClient (data, cb, errorCb) {
-    Vue.http.post('api/register', data)
-        .then(function(res){
-            cb(res.body.user)             
-            }, function(response){                
-                if (response.status ==422){
-                    errorCb(response.body.email[0])
-                }
-            })
+    var keyUser = users.push(data).key;
+    cb(data)
+    //console.log(keyUser);
   },
 
   updateClient (data, cb, errorCb) {
-      Vue.http.post('api/updateUser', data)
+    users.child(data.id).update({"name": data.name,
+                                "email":data.email,"password":data.password}).
+                                then(function() {
+                                  cb()
+                                }).
+                                catch(function(error) {
+                                  errorCb()
+                                });
+
+      /*Vue.http.post('api/updateUser', data)
         .then(function(res){
             cb()             
             }, function(response){
             if (response.status ==422){
                 errorCb()
             }
-        })
+        })*/
   },
 
   deleteClient (data, cb) {
-    Vue.http.post('api/deleteUser', data)
+    users.child(data.id).remove()
+    /*Vue.http.post('api/deleteUser', data)
         .then(function(res){
             cb(res.body)             
             }, function(response){
             if (response.status ==422){
                 
             }
-        })
+        })*/
   }
 }

@@ -41,7 +41,7 @@
                 <th>Auth</th>
                 <th></th>
             </tr>
-            <cliente v-for="item in listUsers" :user="item" :key="item.id"></cliente>            
+            <cliente v-for="item in users" :user="item" :key="item.id"></cliente>            
           </table>
         </div>
     </div>
@@ -53,6 +53,9 @@
   import Navbar from './Navbar.vue'
   import Cliente from './Cliente.vue'
   import FormCliente from './FormCliente.vue'
+  import * as firebase from "firebase";
+  import {db} from '../helpers/firebaseConfig'
+
   //var db = app.database()
   //var users = db.ref('users')
 
@@ -69,6 +72,11 @@
               showForm: true,
               titulo: 'Nuevo Usuario'
           }
+      },
+      firebase() {
+        return {
+          users: db.ref('users')
+        }
       },
       created () {
         //this.$store.dispatch('getAllClients')

@@ -7,7 +7,7 @@
         <span class="label label-default">{{ $store.state.count }}</span>
         </td>
         <td>
-        <button @click="deleteUser(user.id)" class="btn btn-danger btn-xs">
+        <button @click="deleteUser(user['.key'])" class="btn btn-danger btn-xs">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </button>
         <button @click="editarUsuario(user)" class="btn btn-success btn-xs">
@@ -34,36 +34,8 @@ import { mapGetters, mapActions } from 'vuex'
     methods: {
         deleteUser(user){
             var data = { id: user };
-            let vm = this;
-
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Submit',
-                showLoaderOnConfirm: true,
-                preConfirm: function () {
-                    return new Promise(function (resolve, reject) {
-                        vm.$store.dispatch('deleteClient',data)
-                            .then(function(res){
-                                    resolve(); 
-                                    vm.$store.dispatch('getAllClients')          
-                                }, function(response){
-                                if (response.status ==422){
-                                    
-                                }
-                            })
-                    })
-                },
-                allowOutsideClick: false
-                }).then(function (email) {
-                swal({
-                    type: 'success',
-                    title: 'Exito!',
-                    html: 'Cliente eliminado'
-                })
-                })            
+            this.$store.dispatch('deleteClient',data)
+                       
         },
         editarUsuario(user){            
             this.showForm = true;
