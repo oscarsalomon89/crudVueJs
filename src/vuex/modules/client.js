@@ -66,7 +66,6 @@ const mutations = {
   },
 
   [types.ADD_SUCCESS] (state, { client }) {
-    state.all.push(client)
     state.addStatus = 'Cliente Agregado con exito'
   },
 

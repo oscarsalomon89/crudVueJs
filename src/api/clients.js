@@ -10,8 +10,7 @@ export default {
 
   addClient (data, cb, errorCb) {
     var keyUser = users.push(data).key;
-    cb(data)
-    //console.log(keyUser);
+    cb(data)    
   },
 
   updateClient (data, cb, errorCb) {

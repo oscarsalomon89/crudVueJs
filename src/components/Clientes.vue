@@ -116,14 +116,7 @@
 
                 this.$store.dispatch('addClient', data)
                     .then(function(res){
-                        vm.showForm = false;//oculta el form
-                        //document.getElementById('mensajesError').innerHTML = '';
-                        //if (res.status == 422){
-                          //  document.getElementById('mensajes').innerHTML = response.body.email[0];
-                        //}else{
-                            //var mymodal = $('#myModal');
-                            //mymodal.find('.modal-body').text('Usuario agregado con exito');
-                        //}                                   
+                        vm.showForm = false;                                  
                       }, function(response){
                         alert('error');
                   })
