@@ -41,7 +41,7 @@
                 <th>Auth</th>
                 <th></th>
             </tr>
-            <cliente v-for="item in users" :user="item" :key="item.id"></cliente>            
+            <cliente v-for="(item,key) in listUsers" :user="item" :id="key"></cliente>            
           </table>
         </div>
     </div>
@@ -56,8 +56,6 @@
   import * as firebase from "firebase";
   import {db} from '../helpers/firebaseConfig'
 
-  //var db = app.database()
-  //var users = db.ref('users')
 
   export default {
     components: {Navbar, Cliente, FormCliente},
@@ -73,13 +71,13 @@
               titulo: 'Nuevo Usuario'
           }
       },
-      firebase() {
+      /*firebase() {
         return {
           users: db.ref('users')
         }
-      },
+      },*/
       created () {
-        //this.$store.dispatch('getAllClients')
+        this.$store.dispatch('getAllClients')
       },
     methods: {
       openAddUser(){
@@ -116,6 +114,7 @@
 
                 this.$store.dispatch('addClient', data)
                     .then(function(res){
+                        vm.$store.dispatch('getAllClients')
                         vm.showForm = false;                                  
                       }, function(response){
                         alert('error');

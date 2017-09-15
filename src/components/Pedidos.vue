@@ -62,9 +62,6 @@ var messagesRef = db.ref('messages')
         messages: db.ref('messages')
       }
     },
-    created: function () {
-      this.getMessages ();
-    },
     methods: {
       addMessage () {        
         if(this.info.iduser != ''){

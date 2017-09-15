@@ -5,7 +5,12 @@ var users = db.ref('users')
 
 export default {
   getClients (clientes) {
-    clientes(users)            
+    /*users.once('value').then(function(snapshot) {
+      clientes(snapshot.val());
+    });*/
+    users.on('value', function(snapshot) {
+      clientes(snapshot.val());
+    });             
   },
 
   addClient (data, cb, errorCb) {
