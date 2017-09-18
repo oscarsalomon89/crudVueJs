@@ -68,9 +68,6 @@
   import Navbar from './Navbar.vue'
   import Cliente from './Cliente.vue'
   import FormCliente from './FormCliente.vue'
-  import * as firebase from "firebase";
-  import {db} from '../helpers/firebaseConfig'
-
 
   export default {
     components: {Navbar, Cliente, FormCliente},
