@@ -1,6 +1,6 @@
 <template>
     <form v-on:submit.prevent class="form-horizontal">
-        <input type="hidden" v-bind:value="user['.key']" id="iduser" name="iduser">
+        <input type="hidden" v-bind:value="user.id" id="iduser" name="iduser">
         <div class="form-group">
         <label for="inputUser" class="col-sm-4 control-label">Usuario</label>
         <div class="col-sm-8">

@@ -41,7 +41,22 @@
                 <th>Auth</th>
                 <th></th>
             </tr>
-            <cliente v-for="(item,key) in listUsers" :user="item" :id="key"></cliente>            
+            <tr v-for="(user,key,index) in listUsers" :key="key">
+              <th scope="row">{{index}}</th>
+              <td>{{user.name}}</td>
+              <td>{{ user.email }}</td>
+              <td>
+              <span class="label label-default">{{ $store.state.count }}</span>
+              </td>
+              <td>
+              <button @click="deleteUser(key)" class="btn btn-danger btn-xs">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </button>
+              <button @click="editarUsuario(user,key)" class="btn btn-success btn-xs">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              </button>
+              </td>
+          </tr>            
           </table>
         </div>
     </div>
@@ -131,7 +146,22 @@
                 }, function(response){
                   alert('error');
             })
-      }      
+      },
+      deleteUser(user){
+            var data = { id: user };
+            this.$store.dispatch('deleteClient',data)
+            //this.$store.dispatch('getAllClients')      
+        },
+        editarUsuario(user,key){  
+            user.id = key;           
+            this.showForm = true;
+            this.$store.dispatch('selectClient',user);
+            this.$store.dispatch('failMensaje', '');
+            document.getElementById('myModalLabel').innerHTML = 'Editar Usuario';
+            document.getElementById('inputPassword').value = '';
+
+            $('#myModal').modal('show');
+        }      
     }
   }
 </script>

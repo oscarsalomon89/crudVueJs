@@ -7,7 +7,7 @@
         <span class="label label-default">{{ $store.state.count }}</span>
         </td>
         <td>
-        <button @click="deleteUser(user)" class="btn btn-danger btn-xs">
+        <button @click="deleteUser(id)" class="btn btn-danger btn-xs">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </button>
         <button @click="editarUsuario(user)" class="btn btn-success btn-xs">
@@ -33,10 +33,9 @@ import { mapGetters, mapActions } from 'vuex'
     },
     methods: {
         deleteUser(user){
-            console.log(user);
-            /*var data = { id: user };
+            var data = { id: user };
             this.$store.dispatch('deleteClient',data)
-            this.$store.dispatch('getAllClients') */          
+            //this.$store.dispatch('getAllClients')      
         },
         editarUsuario(user){            
             this.showForm = true;

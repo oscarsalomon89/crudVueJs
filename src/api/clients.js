@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import {db} from '../helpers/firebaseConfig'
 
 var users = db.ref('users')
@@ -27,26 +26,9 @@ export default {
                                 catch(function(error) {
                                   errorCb()
                                 });
-
-      /*Vue.http.post('api/updateUser', data)
-        .then(function(res){
-            cb()             
-            }, function(response){
-            if (response.status ==422){
-                errorCb()
-            }
-        })*/
   },
 
   deleteClient (data, cb) {
     users.child(data.id).remove()
-    /*Vue.http.post('api/deleteUser', data)
-        .then(function(res){
-            cb(res.body)             
-            }, function(response){
-            if (response.status ==422){
-                
-            }
-        })*/
   }
 }
