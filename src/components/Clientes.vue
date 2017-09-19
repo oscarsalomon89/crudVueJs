@@ -126,7 +126,7 @@
 
                 this.$store.dispatch('addClient', data)
                     .then(function(res){
-                        vm.$store.dispatch('getAllClients')
+                        //vm.$store.dispatch('getAllClients')
                         vm.showForm = false;                                  
                       }, function(response){
                         alert('error');
@@ -138,7 +138,7 @@
           user.id = id;
           this.$store.dispatch('updateClient', user)
               .then(function(res){
-                  vm.$store.dispatch('getAllClients')
+                  //vm.$store.dispatch('getAllClients')
                   vm.showForm = false;//oculta el form                              
                 }, function(response){
                   alert('error');

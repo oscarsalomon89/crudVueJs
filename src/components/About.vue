@@ -9,6 +9,7 @@
 
   <!-- List group -->
   <input type="file" id="fileButton"/>
+  <img src="" alt="" class="img-rounded" id="fileUpload">
 </div>
 </template>
 <script>
@@ -57,7 +58,8 @@
                 }, function() {
                   // Upload completed successfully, now we can get the download URL
                   var downloadURL = uploadTask.snapshot.downloadURL;
-                  alert('Upload OK. URL: '+downloadURL);
+                  document.getElementById('fileUpload').src = downloadURL;
+                  //alert('Upload OK. URL: '+downloadURL);
                 });
             }); 
       }
