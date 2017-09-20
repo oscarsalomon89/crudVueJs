@@ -9,23 +9,40 @@
 
   <!-- List group -->
   <input type="file" id="fileButton"/>
-  <img src="" alt="" class="img-rounded" id="fileUpload">
+  <br>
+    <ul>
+      <li v-for="file in listFiles" class="msg" :key="file['.key']">
+          <img v-bind:src="file.url" v-bind:title="file.name" alt="" class="img-rounded" id="fileUpload">
+      </li>
+    </ul>
+  
 </div>
 </template>
 <script>
    import auth from '../auth/auth.js';
   import Navbar from './Navbar.vue';
   import * as firebase from "firebase";
-  import {storage} from '../helpers/firebaseConfig'  
+  import {storage,db} from '../helpers/firebaseConfig'  
+
+  var filesRef = db.ref('files')
+  var storageRef = storage.ref();
 
   export default {
     components: { 'Navbar': Navbar },
+    /*created () {
+        this.$store.dispatch('getAllClients')
+      }*/
+      firebase() {
+        return {
+          listFiles: filesRef
+        }
+      },
     mounted () {
         var fileButton = document.getElementById("fileButton");
             fileButton.addEventListener('change', function(e){
-                var file = e.target.files[0];
-                var storageRef = storage.ref();
-                var uploadTask = storageRef.child('images/'+file.name).put(file);
+                var file = e.target.files[0];                
+                var imgRef = storageRef.child('images/'+file.name);
+                var uploadTask = imgRef.put(file);
                 //var storageRef = storage.ref(file.name);
                 //storageRef.put(file);
                 // Listen for state changes, errors, and completion of the upload.
@@ -58,8 +75,24 @@
                 }, function() {
                   // Upload completed successfully, now we can get the download URL
                   var downloadURL = uploadTask.snapshot.downloadURL;
-                  document.getElementById('fileUpload').src = downloadURL;
-                  //alert('Upload OK. URL: '+downloadURL);
+                  var ref = uploadTask.snapshot.ref;
+                  var path = uploadTask.snapshot.ref.fullPath;
+                  var folder = path.split('/')[0];
+                  var metadata = uploadTask.snapshot.metadata;
+
+                  var img = {
+                              name: ref.name,
+                              path: path,
+                              folder: folder,
+                              url: downloadURL,
+                              created: metadata.timeCreated,
+                              hash: metadata.md5Hash,
+                              contenttype: metadata.contentType
+                            }
+
+                  filesRef.push(img)
+                  //document.getElementById('fileUpload').src = downloadURL;
+                  alert('Upload OK.');
                 });
             }); 
       }
