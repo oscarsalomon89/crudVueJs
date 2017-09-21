@@ -8,14 +8,32 @@
   </div>
 
   <!-- List group -->
-  <input type="file" id="fileButton"/>
-  <br>
-    <ul>
-      <li v-for="file in listFiles" class="msg" :key="file['.key']">
-          <img v-bind:src="file.url" v-bind:title="file.name" alt="" class="img-rounded" id="fileUpload">
-      </li>
-    </ul>
+  <div class="row">
+    <div class="col-xs-6 col-md-3">
+      <input type="file" id="fileButton"/>
+    </div>
+    <div class="col-xs-6 col-md-4">
+      <div class="progress">
+          <div class="progress-bar" role="progressbar" v-bind:aria-valuenow="cargando" 
+          aria-valuemin="0" aria-valuemax="100" v-bind:style="{width: cargando+'%'}">
+          {{cargando}}%
+        </div>
+      </div>  
+    </div>
+    </div>
   
+  <br>
+  <div class="row">
+    <div v-for="file in listFiles" :key="file['.key']" class="col-xs-6 col-md-3">
+      <a href="#" class="thumbnail">
+        <img v-bind:src="file.url" v-bind:title="file.name" alt="...">
+      </a>
+      <div class="caption">
+        <h3>{{file.name}}</h3>
+        <p><a @click="deleteFile(file)" class="btn btn-primary" role="button">Eliminar</a></p>
+      </div>
+    </div>
+</div>  
 </div>
 </template>
 <script>
@@ -29,9 +47,11 @@
 
   export default {
     components: { 'Navbar': Navbar },
-    /*created () {
-        this.$store.dispatch('getAllClients')
-      }*/
+    data() {
+          return {
+              cargando: 0
+          }
+      },
       firebase() {
         return {
           listFiles: filesRef
@@ -50,7 +70,7 @@
                   function(snapshot) {
                     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Upload is ' + progress + '% done');
+                    this.cargando = progress;
                     switch (snapshot.state) {
                       case firebase.storage.TaskState.PAUSED: // or 'paused'
                         console.log('Upload is paused');
@@ -95,6 +115,21 @@
                   alert('Upload OK.');
                 });
             }); 
+      },
+      methods: {
+        deleteFile (file) {  
+          var path = file.path;
+          let key = file['.key'];    
+          var fileRef = storageRef.child(path);
+          // Delete the file
+          fileRef.delete().then(function() {
+            // File deleted successfully
+            //Elimino en la base de datos
+            filesRef.child(key).remove()
+          }).catch(function(error) {
+            // Uh-oh, an error occurred!
+          });
+        }
       }
   }
 </script>
