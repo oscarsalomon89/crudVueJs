@@ -1,11 +1,31 @@
 <template>
 <div>
   <Navbar></Navbar>
-  <!-- Default panel contents -->
-  <div class="panel-heading">Panel heading</div>
-  <div class="panel-body">
-    <p>Esta es la historia de vue js</p>
-  </div>
+  <h1>Clientes <small>Subtext for header</small></h1>
+    <button type="button" class="btn btn-primary" v-on:click="openAddItem()" data-target="#myModal">
+      Agregar Producto
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel"></h4>
+          </div>
+          <div class="modal-body">
+            <FormItem v-show="addStatus == null" :item="itemSelected"></FormItem>
+            <p id="mensajesError">{{ addFailure }}</p>
+            <p v-show="addStatus != null" id="mensajes">{{ addStatus }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" v-show="addStatus == null" @click="addItem()" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   <!-- List group -->
   <div class="row">
@@ -21,32 +41,55 @@
       </div>  
     </div>
     </div>
-  
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">              
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+              <span class="sr-only">Close</span>
+            </button>
+            <img src="" class="imagepreview" style="width: 100%; height:350px" >
+          </div>
+        </div>
+      </div>
+    </div>
   <br>
   <div class="row">
     <div v-for="file in listFiles" :key="file['.key']" class="col-xs-6 col-md-3">
-      <a href="#" class="thumbnail">
-        <img v-bind:src="file.url" v-bind:title="file.name" alt="...">
+      <a @click="openFile(file.url)" class="portfolio-box">
+          <img v-bind:src="file.url" class="img-responsive" alt="">
+          <div class="portfolio-box-caption">
+              <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                      {{file.name}}
+                  </div>
+              </div>
+          </div>
       </a>
-      <div class="caption">
-        <h3>{{file.name}}</h3>
-        <p><a @click="deleteFile(file)" class="btn btn-primary" role="button">Eliminar</a></p>
-      </div>
+      <p><a @click="deleteFile(file)" class="btn btn-primary" role="button">Eliminar</a></p>
     </div>
 </div>  
 </div>
 </template>
 <script>
    import auth from '../auth/auth.js';
-  import Navbar from './Navbar.vue';
+  import Navbar from './Navbar.vue';  
   import * as firebase from "firebase";
   import {storage,db} from '../helpers/firebaseConfig'  
+  import { mapGetters, mapActions } from 'vuex'
+  import FormItem from './FormItem.vue'
 
   var filesRef = db.ref('files')
   var storageRef = storage.ref();
 
   export default {
     components: { 'Navbar': Navbar },
+    computed: mapGetters({
+        listItems: 'allProducts',
+        addStatus: 'addStatus',
+        addFailure: 'addFailure',
+        itemSelected: 'itemSelected'
+      }),
     data() {
           return {
               cargando: 0
@@ -58,6 +101,15 @@
         }
       },
       methods: {
+        openAddItem(){
+          this.$store.dispatch('selectItem',[]);
+          //this.$store.dispatch('failMensaje', '');
+          //document.getElementById('mensajesError').innerHTML = '';
+          //document.getElementById('inputPassword').value = '';
+          document.getElementById('myModalLabel').innerHTML = 'Nuevo Producto';
+
+          $('#myModal').modal('show');
+        },
         deleteFile (file) {  
           var path = file.path;
           let key = file['.key'];    
@@ -90,8 +142,8 @@
               tempImg.onload = function() {
                 // Comprobamos con el aspect cómo será la reducción
                 // MAX_IMAGE_SIZE_PROCESS es la N que definimos como máxima
-                var MAX_WIDTH = 600;
-                var MAX_HEIGHT = 800;
+                var MAX_WIDTH = 650;
+                var MAX_HEIGHT = 350;
                 var tempW = tempImg.width;
                 var tempH = tempImg.height;
                 if (tempW > tempH) {
@@ -188,6 +240,10 @@
               //document.getElementById('fileUpload').src = downloadURL;
               alert('Upload OK.');
             });
+        },
+        openFile(url){
+            $('.imagepreview').attr('src',url);
+			      $('#imagemodal').modal('show');   
         }
       }
   }
