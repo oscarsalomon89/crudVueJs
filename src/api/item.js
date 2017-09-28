@@ -12,5 +12,17 @@ export default {
   addItem (data, cb, errorCb) {
     var keyUser = items.push(data).key;
     cb(data)    
+  },
+
+  updateItem (data, cb, errorCb) {
+    items.child(data.id).update({"codigo": data.codigo,
+                                "descripcion":data.descripcion,
+                                "precio":data.precio}).
+                                then(function() {
+                                  cb()
+                                }).
+                                catch(function(error) {
+                                  errorCb()
+                                });
   }
 }

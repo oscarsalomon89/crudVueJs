@@ -39,12 +39,13 @@
               <td>{{item.descripcion}}</td>
               <td>{{ item.precio }}</td>
               <td>
-              <button @click="deleteItem(key)" class="btn btn-danger btn-xs">
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-              </button>
-              <button @click="editarItem(item,key)" class="btn btn-success btn-xs">
-                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-              </button>
+                <input type="file" id="fileButton" @change="upload($event,item.codigo)"/>
+                <button @click="deleteItem(key)" class="btn btn-danger btn-xs">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+                <button @click="editarItem(item,key)" class="btn btn-success btn-xs">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>
               </td>
           </tr>            
     </table>
@@ -117,6 +118,9 @@
               cargando: 0
           }
       },
+      created () {
+        this.$store.dispatch('getAllProducts')
+      },
       firebase() {
         return {
           listFiles: filesRef
@@ -175,19 +179,19 @@
             // Uh-oh, an error occurred!
           });
         },
-        upload(e){
+        upload(e,codigo){
           var file = e.target.files[0];                
           var extension = file['type'].split('/').pop();
 
           if(extension == 'jpg' || extension == 'jpeg'){
-              this.resizeAndUpload(file);
+              this.resizeAndUpload(file,codigo);
           }else{
             alert('Extension no permitida!');
           }
         },
-        resizeAndUpload(file){
+        resizeAndUpload(file,codigo){
             let vm = this;
-            let name = file.name;
+            let name = codigo;
             var reader = new FileReader();
             reader.onloadend = function() {
               var tempImg = new Image();
@@ -287,7 +291,7 @@
                           hash: metadata.md5Hash,
                           contenttype: metadata.contentType
                         }
-
+              
               filesRef.push(img)
               //document.getElementById('fileUpload').src = downloadURL;
               alert('Upload OK.');

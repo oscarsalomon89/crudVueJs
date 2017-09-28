@@ -29,6 +29,14 @@ const actions = {
     )
   },
 
+  updateItem ({ commit }, data) {
+    items.updateItem(
+      data,
+      () => commit(types.UPDATE_SUCCESS),
+      () => commit(types.UPDATE_FAILURE)
+    )
+  },
+
   selectItem ({ commit }, item) {    
       commit(types.ITEM_SELECTED, { item })
   }
