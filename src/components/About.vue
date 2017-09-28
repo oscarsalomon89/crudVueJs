@@ -27,6 +27,28 @@
       </div>
     </div>
 
+    <table class="table table-striped">
+            <tr>
+                <th>Cod</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th></th>
+            </tr>
+            <tr v-for="(item,key) in listItems" :key="key">
+              <td>{{item.codigo}}</td>
+              <td>{{item.descripcion}}</td>
+              <td>{{ item.precio }}</td>
+              <td>
+              <button @click="deleteItem(key)" class="btn btn-danger btn-xs">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </button>
+              <button @click="editarItem(item,key)" class="btn btn-success btn-xs">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              </button>
+              </td>
+          </tr>            
+    </table>
+
   <!-- List group -->
   <div class="row">
     <div class="col-xs-6 col-md-3">
@@ -72,18 +94,18 @@
 </div>
 </template>
 <script>
-   import auth from '../auth/auth.js';
+  import auth from '../auth/auth.js';
   import Navbar from './Navbar.vue';  
   import * as firebase from "firebase";
   import {storage,db} from '../helpers/firebaseConfig'  
   import { mapGetters, mapActions } from 'vuex'
-  import FormItem from './FormItem.vue'
+  import FormItem from './FormItem.vue';
 
   var filesRef = db.ref('files')
   var storageRef = storage.ref();
 
   export default {
-    components: { 'Navbar': Navbar },
+    components: {Navbar, FormItem },
     computed: mapGetters({
         listItems: 'allProducts',
         addStatus: 'addStatus',
@@ -109,6 +131,36 @@
           document.getElementById('myModalLabel').innerHTML = 'Nuevo Producto';
 
           $('#myModal').modal('show');
+        },
+        addItem(){          
+            let vm = this;
+            var id   = document.getElementById('iditem').value;
+            var cod = document.getElementById('inputCodigo').value;
+            var desc = document.getElementById('inputDescripcion').value;
+            var price = document.getElementById('inputPrecio').value;          
+
+            if (cod == '' || desc =='' || price == '') {
+              var msgError = 'Datos incompletos';
+              this.$store.dispatch('failMensaje', msgError)
+            } else {
+              var data = {
+                  codigo: cod,
+                  descripcion: desc,
+                  precio: price
+                  };
+
+                  if(id != ''){
+                    this.updateItem(data,id);
+                    return;
+                  }
+
+                  this.$store.dispatch('addItem', data)
+                      .then(function(res){
+                          vm.showForm = false;                                  
+                        }, function(response){
+                          alert('error');
+                    })
+            }
         },
         deleteFile (file) {  
           var path = file.path;

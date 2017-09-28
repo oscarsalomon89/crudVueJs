@@ -1,20 +1,16 @@
-import items from '../../api/shop'
+import items from '../../api/item'
 import * as types from '../mutation-types'
 
 // initial state
 const state = {
   all: [],
-  addStatus: null,
-  addFailure: null,
   itemSelected: []
 }
 
 // getters
 const getters = {
   allProducts: state => state.all,
-  itemSelected: state => state.itemSelected,
-  addStatus: state => state.addStatus,
-  addFailure: state => state.addFailure,
+  itemSelected: state => state.itemSelected
 }
 
 // actions
