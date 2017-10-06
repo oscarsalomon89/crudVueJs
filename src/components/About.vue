@@ -40,8 +40,7 @@
               <td>{{item.descripcion}}</td>
               <td>{{ item.precio }}</td>
               <td><a @click="openFile(item.url)">link</a></td>
-              <td>
-                <input type="file" id="fileButton" @change="upload($event,item.codigo,key)"/>
+              <td>                
                 <button @click="deleteItem(key)" class="btn btn-danger btn-xs">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
