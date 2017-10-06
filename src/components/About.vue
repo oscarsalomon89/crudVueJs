@@ -2,7 +2,7 @@
 <div>
   <Navbar></Navbar>
   <h1>Clientes <small>Subtext for header</small></h1>
-    <button type="button" class="btn btn-primary" v-on:click="openAddItem()" data-target="#myModal">
+    <button type="button" class="btn btn-primary" v-on:click="openAddItem([],0)" data-target="#myModal">
       Agregar Producto
     </button>
 
@@ -32,38 +32,26 @@
                 <th>Cod</th>
                 <th>Descripcion</th>
                 <th>Precio</th>
+                <th>imagen</th>
                 <th></th>
             </tr>
             <tr v-for="(item,key) in listItems" :key="key">
               <td>{{item.codigo}}</td>
               <td>{{item.descripcion}}</td>
               <td>{{ item.precio }}</td>
+              <td><a @click="openFile(item.url)">link</a></td>
               <td>
-                <input type="file" id="fileButton" @change="upload($event,item.codigo)"/>
+                <input type="file" id="fileButton" @change="upload($event,item.codigo,key)"/>
                 <button @click="deleteItem(key)" class="btn btn-danger btn-xs">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                <button @click="editarItem(item,key)" class="btn btn-success btn-xs">
+                <button @click="openAddItem(item,key)" class="btn btn-success btn-xs">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </button>
               </td>
           </tr>            
     </table>
 
-  <!-- List group -->
-  <div class="row">
-    <div class="col-xs-6 col-md-3">
-      <input type="file" id="fileButton" @change="upload($event)"/>
-    </div>
-    <div class="col-xs-6 col-md-4">
-      <div class="progress">
-          <div class="progress-bar" role="progressbar" v-bind:aria-valuenow="cargando" 
-          aria-valuemin="0" aria-valuemax="100" v-bind:style="{width: cargando+'%'}">
-          {{cargando}}%
-        </div>
-      </div>  
-    </div>
-    </div>
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">              
@@ -75,23 +63,7 @@
           </div>
         </div>
       </div>
-    </div>
-  <br>
-  <div class="row">
-    <div v-for="file in listFiles" :key="file['.key']" class="col-xs-6 col-md-3">
-      <a @click="openFile(file.url)" class="portfolio-box">
-          <img v-bind:src="file.url" class="img-responsive" alt="">
-          <div class="portfolio-box-caption">
-              <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                      {{file.name}}
-                  </div>
-              </div>
-          </div>
-      </a>
-      <p><a @click="deleteFile(file)" class="btn btn-primary" role="button">Eliminar</a></p>
-    </div>
-</div>  
+    </div> 
 </div>
 </template>
 <script>
@@ -127,12 +99,19 @@
         }
       },
       methods: {
-        openAddItem(){
-          this.$store.dispatch('selectItem',[]);
+        openAddItem(item,key){
+          if(key == 0){
+            var title = 'Nuevo producto';
+          }else{
+            item.id = key; 
+            var title = 'Editar producto';
+          }
+
+          this.$store.dispatch('selectItem',item);
           //this.$store.dispatch('failMensaje', '');
           //document.getElementById('mensajesError').innerHTML = '';
           //document.getElementById('inputPassword').value = '';
-          document.getElementById('myModalLabel').innerHTML = 'Nuevo Producto';
+          document.getElementById('myModalLabel').innerHTML = title;
 
           $('#myModal').modal('show');
         },
@@ -166,6 +145,17 @@
                     })
             }
         },
+        updateItem(item,id){
+            let vm = this;
+            item.id = id;
+            this.$store.dispatch('updateItem', item)
+                .then(function(res){
+                    //vm.$store.dispatch('getAllClients')
+                    vm.showForm = false;//oculta el form                              
+                  }, function(response){
+                    alert('error');
+              })
+        },
         deleteFile (file) {  
           var path = file.path;
           let key = file['.key'];    
@@ -179,19 +169,20 @@
             // Uh-oh, an error occurred!
           });
         },
-        upload(e,codigo){
+        upload(e,codigo,key){
           var file = e.target.files[0];                
           var extension = file['type'].split('/').pop();
 
           if(extension == 'jpg' || extension == 'jpeg'){
-              this.resizeAndUpload(file,codigo);
+              this.resizeAndUpload(file,codigo,key);
           }else{
             alert('Extension no permitida!');
           }
         },
-        resizeAndUpload(file,codigo){
+        resizeAndUpload(file,codigo,key){
             let vm = this;
             let name = codigo;
+            let clave = key;
             var reader = new FileReader();
             reader.onloadend = function() {
               var tempImg = new Image();
@@ -225,7 +216,7 @@
                 // Envíamos por Ajax el objeto Blob
                 // Cogiendo el valor de photo (nombre del input file)
                 var file = vm.dataURLtoBlob(dataURL);
-                vm.uploadImage(file,name);
+                vm.uploadImage(file,name,clave);
               };
               tempImg.src = reader.result;
             }
@@ -243,7 +234,9 @@
           // Retorna el objeto Blob
           return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
         },
-        uploadImage(file,name){
+        uploadImage(file,name,clave){
+            let key = clave;
+            let vm = this;
             var imgRef = storageRef.child('images/'+name);
             var uploadTask = imgRef.put(file);
 
@@ -291,13 +284,16 @@
                           hash: metadata.md5Hash,
                           contenttype: metadata.contentType
                         }
+
+              var data = {id:key,url:downloadURL};
               
+              vm.$store.dispatch('updateUrl',data);
               filesRef.push(img)
               //document.getElementById('fileUpload').src = downloadURL;
-              alert('Upload OK.');
+              alert('Upload OK.'+key);
             });
         },
-        openFile(url){
+        openFile(url){            
             $('.imagepreview').attr('src',url);
 			      $('#imagemodal').modal('show');   
         }

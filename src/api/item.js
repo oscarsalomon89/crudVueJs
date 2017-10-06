@@ -24,5 +24,15 @@ export default {
                                 catch(function(error) {
                                   errorCb()
                                 });
+  },
+
+  updateUrl (data, cb, errorCb) {
+    items.child(data.id).update({"url": data.url}).
+                                then(function() {
+                                  cb()
+                                }).
+                                catch(function(error) {
+                                  errorCb()
+                                });
   }
 }

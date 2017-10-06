@@ -37,6 +37,14 @@ const actions = {
     )
   },
 
+  updateUrl ({ commit }, data) {
+    items.updateUrl(
+      data,
+      () => commit(types.UPDATE_SUCCESS),
+      () => commit(types.UPDATE_FAILURE)
+    )
+  },
+
   selectItem ({ commit }, item) {    
       commit(types.ITEM_SELECTED, { item })
   }
