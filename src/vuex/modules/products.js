@@ -48,6 +48,7 @@ const actions = {
   selectItem ({ commit }, item) {    
       commit(types.ITEM_SELECTED, { item })
   }
+
 }
 
 // mutations
@@ -63,6 +64,7 @@ const mutations = {
   [types.RECEIVE_PRODUCTS] (state, { products }) {
     state.all = products
   }
+  
 }
 
 export default {

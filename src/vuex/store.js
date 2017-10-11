@@ -4,6 +4,7 @@ import * as actions from './actions'
 import * as getters from './getters'
 import products from './modules/products'
 import client from './modules/client'
+import files from './modules/files'
  
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     getters,
     modules: {
       products,
-      client
+      client,
+      files
     }
 })

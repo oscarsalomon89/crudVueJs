@@ -22,7 +22,7 @@
         <input type="file" multiple="multiple" id="fileButton" @change="upload(item.codigo,item.id)"/> 
         <br>
         <div class="row"> 
-            <div v-for="file in listFiles" :key="file['.key']" class="col-xs-6 col-md-3">        
+            <div v-for="file in files" :key="file['.key']" class="col-xs-6 col-md-3">        
                 <a @click="openFile(file.url)" class="portfolio-box">        
                     <img style="height:60px;" v-bind:src="file.url" class="img-responsive" alt="">        
                     <div class="portfolio-box-caption">        
@@ -49,12 +49,7 @@ var storageRef = storage.ref();
 
  export default {
     name: 'FormItem',
-    props: ['item'],
-    firebase() {
-        return {
-            listFiles: filesRef
-        }
-    },
+    props: ['item','files'],
     methods: {
         upload(codigo,key){
             var fileSelect  = document.getElementById('fileButton');
@@ -73,6 +68,19 @@ var storageRef = storage.ref();
                     alert('Extension no permitida!');
                 }
             }          
+        },
+        deleteFile (file) {  
+          var path = file.path;
+          let key = file['.key'];    
+          var fileRef = storageRef.child(path);
+          // Delete the file
+          fileRef.delete().then(function() {
+            // File deleted successfully
+            //Elimino en la base de datos
+            filesRef.child(key).remove()
+          }).catch(function(error) {
+            // Uh-oh, an error occurred!
+          });
         },
         resizeAndUpload(file,codigo,key){
             let vm = this;
@@ -167,7 +175,7 @@ var storageRef = storage.ref();
               var downloadURL = uploadTask.snapshot.downloadURL;
               var ref = uploadTask.snapshot.ref;
               var path = uploadTask.snapshot.ref.fullPath;
-              var folder = path.split('/')[0];
+              var folder = path.split('/')[1];
               var metadata = uploadTask.snapshot.metadata;
 
               var img = {
@@ -183,9 +191,7 @@ var storageRef = storage.ref();
               //var data = {id:key,url:downloadURL};
               
               //vm.$store.dispatch('updateUrl',data);
-              filesRef.push(img)
-              //document.getElementById('fileUpload').src = downloadURL;
-              alert('Upload OK.'+key);
+              filesRef.push(img);
             });
         }
     }
