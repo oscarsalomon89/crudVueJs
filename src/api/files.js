@@ -18,5 +18,9 @@ export default {
   addFile (data, cb, errorCb) {
     var keyUser = filesRef.push(data).key;
     cb(data)    
-  }
+  },
+  
+  deleteFile (data, cb) {
+    filesRef.child(data).remove()
+    }
 }

@@ -68,11 +68,8 @@
 <script>
   import auth from '../auth/auth.js';
   import Navbar from './Navbar.vue';  
-  import {storage,db} from '../helpers/firebaseConfig'  
   import { mapGetters, mapActions } from 'vuex'
   import FormItem from './FormItem.vue';
-
-  var storageRef = storage.ref();
 
   export default {
     components: {Navbar, FormItem },

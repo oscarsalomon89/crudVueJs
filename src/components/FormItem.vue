@@ -22,7 +22,7 @@
         <input type="file" multiple="multiple" id="fileButton" @change="upload(item.codigo,item.id)"/> 
         <br>
         <div class="row"> 
-            <div v-for="file in files" :key="file['.key']" class="col-xs-6 col-md-3">        
+            <div v-for="(file,key) in files" :key="file['.key']" class="col-xs-6 col-md-3">        
                 <a @click="openFile(file.url)" class="portfolio-box">        
                     <img style="height:60px;" v-bind:src="file.url" class="img-responsive" alt="">        
                     <div class="portfolio-box-caption">        
@@ -34,7 +34,7 @@
                     </div>        
                 </a>        
                 <p>
-                    <a @click="deleteFile(file)" class="btn btn-primary" role="button">Eliminar</a>
+                    <a @click="deleteFile(file,key)" class="btn btn-primary" role="button">Eliminar</a>
                 </p>
             </div>        
         </div>                      
@@ -42,14 +42,22 @@
 </template>
 <script>
 import * as firebase from "firebase";
-import {storage,db} from '../helpers/firebaseConfig'
+import {storage} from '../helpers/firebaseConfig'
+import { mapGetters, mapActions } from 'vuex'
 
-var filesRef = db.ref('files')
 var storageRef = storage.ref();
 
  export default {
     name: 'FormItem',
     props: ['item','files'],
+    computed: mapGetters({
+        filesItem: 'filesItem',
+        addStatusFile: 'addStatusFile',
+        addFailurefile: 'addFailurefile'
+      }),
+      created () {
+        //this.$store.dispatch('selectFilesItem', img)
+      },
     methods: {
         upload(codigo,key){
             var fileSelect  = document.getElementById('fileButton');
@@ -69,16 +77,20 @@ var storageRef = storage.ref();
                 }
             }          
         },
-        deleteFile (file) {  
+        deleteFile (file,id) {  
           var path = file.path;
-          let key = file['.key'];    
+          let codigo = file.folder;
+          let key = id;    
           var fileRef = storageRef.child(path);
+          var vm = this;
           // Delete the file
           fileRef.delete().then(function() {
             // File deleted successfully
             //Elimino en la base de datos
-            filesRef.child(key).remove()
+            vm.$store.dispatch('deleteFile',key)
+            vm.$store.dispatch('selectFilesItem',codigo);
           }).catch(function(error) {
+              console.log(error);
             // Uh-oh, an error occurred!
           });
         },
@@ -189,9 +201,9 @@ var storageRef = storage.ref();
                         }
 
               //var data = {id:key,url:downloadURL};
-              
-              //vm.$store.dispatch('updateUrl',data);
-              filesRef.push(img);
+              console.log('finalizado');
+              vm.$store.dispatch('addFile', img)
+              vm.$store.dispatch('selectFilesItem',folder);
             });
         }
     }

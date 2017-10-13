@@ -30,6 +30,10 @@ const actions = {
       codigo,
       files => { commit(types.FILES_ITEM, { files })}
     )
+  },
+  
+  deleteFile ({ commit }, data) {
+    files.deleteFile(data)
   }
 
 }
